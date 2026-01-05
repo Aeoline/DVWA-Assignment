@@ -14,27 +14,42 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Semgrep
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Semgrep
         run: |
+          python -m pip install --upgrade pip
           pip install semgrep
 
       - name: SAST
         continue-on-error: true
         run: |
-          semgrep scan
-          --config=p/owasp-top-ten
-          --config=p/php
+          semgrep scan --config=p/owasp-top-ten --config=p/php
 
   trivy:
     name: Run SCA Trivy
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Run Trivy vulnerability scanner
+      - name: Run Trivy SCA
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
           scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload SCA finding
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
