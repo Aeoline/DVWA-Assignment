@@ -1,4 +1,4 @@
-name: Assignment SAST
+name: Assignment SAST 
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   semgrep:
-    name: Run SAST
+    name: Run SAST Semgrep
     runs-on: ubuntu-latest
 
     steps:
