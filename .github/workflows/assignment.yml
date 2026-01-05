@@ -9,6 +9,9 @@ jobs:
   semgrep:
     name: Run SAST Semgrep
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout repo
@@ -21,12 +24,10 @@ jobs:
       - name: SAST
         continue-on-error: true
         run: |
-          semgrep scan
-          --config=p/owasp-top-ten
-          --config=p/php
-          --sarif --output=semgrep-results.sarif
+          semgrep scan --config=p/owasp-top-ten --config=p/php --sarif -o semgrep-results.sarif
 
       - name: Upload SAST to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
         with:
           sarif_file: semgrep-results.sarif
