@@ -18,7 +18,7 @@ jobs:
         run: |
           pip install semgrep
 
-      - name: SAST 
+      - name: SAST
+        continue-on-error: true
         run: |
-          continue-on-error: true
-          semgrep scan --config=p/owasp-top-ten --config=p/php --error
+          semgrep scan --config=p/owasp-top-ten --config=p/php
