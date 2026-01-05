@@ -2,7 +2,7 @@ name: Assignment SAST
 
 on:
   push:
-    branches: ["sca"]
+    branches: ["SCA"]
   pull_request:
 
 jobs:
