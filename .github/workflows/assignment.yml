@@ -1,0 +1,24 @@
+name: Assignment SAST
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  semgrep:
+    name: Run SAST
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Semgrep
+        run: |
+          pip install semgrep
+
+      - name: SAST 
+        run: |
+          continue-on-error: true
+          semgrep scan --config=p/owasp-top-ten --config=p/php --error
